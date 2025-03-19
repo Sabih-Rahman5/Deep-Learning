@@ -1,49 +1,28 @@
 import streamlit as st
-import json
-import os
+from ModelManager import GPUModelManager  # Import function from helper.py
 
+# Streamlit app
 st.title("Test App")
 
-# File to store the selected item
-PERSISTENCE_FILE = "selected_item.json"
-
-# Initializer function
-def initialize_app():
-    print("starting App")
-
-# Function to load the last selected item
-def load_last_selected():
-    if os.path.exists(PERSISTENCE_FILE):
-        with open(PERSISTENCE_FILE, "r") as file:
-            return json.load(file).get("selected", "Select an item")
-    return "Select an item"
-
-# Function to save the selected item
-def save_selected(item):
-    with open(PERSISTENCE_FILE, "w") as file:
-        json.dump({"selected": item}, file)
-
-# Initialize app
-initialize_app()
-
-# Load the last selected item
-if "selected_item" not in st.session_state:
-    st.session_state.selected_item = load_last_selected()
-
 # Dropdown menu
-options = ["Select an item", "LLama 3.2", "DeepSeek-r1", "Gemma"]
-selected_item = st.selectbox("Choose an item:", options, index=options.index(st.session_state.selected_item))
-
-# Function to execute upon selection
-def execute_function(item):
-    if item != "Select an item":
-        st.write(f"You selected: {item}")
-        st.session_state.selected_item = item
-        save_selected(item)  # Persist the selection
-
-# Execute function when an item is selected
-execute_function(selected_item)
+options = ["Select Model", "Llama-3.2", "Gemma-3", "DeepSeek-r1"]
+selected_option = st.selectbox("Select an option:", options)
 
 
+def setStatus():
+    manager = GPUModelManager().getInstance()
+    if(manager.getState() == "empty"):
+        st.write("No model loaded")
+    elif(manager.getState() == "loading"):
+        st.write("Loading model...")
+    elif(manager.getState() == "loaded"):
+        st.write(manager.getLoadedModel() + " loaded")
+
+# Button to trigger function
+if st.button("Run"):
+    manager = GPUModelManager().getInstance()
+    manager.loadModel(selected_option)  
+    
+    st.write(f"You selected: {selected_option}")
 
 # streamlit run app.py --server.address 0.0.0.0 --server.port 80
