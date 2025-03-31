@@ -1,29 +1,33 @@
 import streamlit as st
-from langchain.document_loaders import PyPDFLoader
-from ModelManager import GPUModelManager  # Import function from helper.py
+from ModelManager import GPUModelManager
+import os
 
 # Streamlit app
 st.title("Test App")
+manager = GPUModelManager().getInstance()
+state = manager.getState()
 
 knowledgeBase_pdf = st.file_uploader("Upload Knowledge Base", type=["pdf"])
-if knowledgeBase_pdf is not None:
-    loader = PyPDFLoader(knowledgeBase_pdf)
-    doc = loader.load()
-    
-    st.write("Knowledge Base uploaded!")
 
+
+if knowledgeBase_pdf is not None:
+    save_path = os.path.join("knowledge_base", knowledgeBase_pdf.name)
+    os.makedirs("knowledge_base", exist_ok=True)
+    with open(save_path, "wb") as f:
+        f.write(knowledgeBase_pdf.read())
+        
+    manager.knowledge_base = save_path
+    st.success("Knowledge Base uploaded!")
+    print(save_path)
 
 assignment_pdf = st.file_uploader("Upload Assignemnt", type=["pdf"])
 if assignment_pdf is not None:
     st.write("Assignment uploaded!")
 
 
-
-
 # Dropdown menu for model selection
 options = ["None", "Llama-3.2", "Gemma-3", "DeepSeek-r1"]
-manager = GPUModelManager().getInstance()
-state = manager.getState()
+
 
 if state == "empty":
     selected_option = st.selectbox("Select LLM:", options)

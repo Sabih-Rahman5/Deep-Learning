@@ -11,6 +11,7 @@ class GPUModelManager:
             self._modelName = ""
             self._currentState = "empty"
             self.model = None
+            self.knowledge_base = None
         
         def getState(self):
             return self._currentState
@@ -30,7 +31,7 @@ class GPUModelManager:
             self._modelName = modelname
             
             if(modelname == "DeepSeek-r1"):
-                self.model = DeepSeek.loadModel()
+                self.model = DeepSeek.loadModel(self.knowledge_base)
                 self._currentState = "loaded"
         
         def clearGpu(self):
@@ -41,6 +42,7 @@ class GPUModelManager:
                 device.reset()
                 self._modelName = None
                 self._currentState = "empty"
+    
     
     @classmethod
     def getInstance(cls):

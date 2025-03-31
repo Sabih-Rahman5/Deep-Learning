@@ -47,12 +47,26 @@ def loadModel():
         template=prompt_template,
     )
 
-    llm_chain = prompt | llm_pipeline | StrOutputParser()
+    if(knowledge_base != None):
+        loader = PyPDFLoader(knowledge_base)
+        docs = loader.load()
+        llm_chain = prompt | llm_pipeline | StrOutputParser()
+        splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=30)
+        chunked_docs = splitter.split_documents(docs)
 
+        db = FAISS.from_documents(chunked_docs, HuggingFaceEmbeddings(model_name='BAAI/bge-base-en-v1.5'))
+        retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 3})
 
-    pipeline = (
-        {"context": retriever, "question": RunnablePassthrough()}
-        | llm_chain
-    )
+        pipeline = (
+            {"context": retriever, "question": RunnablePassthrough()}
+            | llm_chain
+            )
+
+    else:
+        pipeline = (
+            {"question": RunnablePassthrough()}
+            | llm_pipeline
+            )
+
 
     return pipeline
