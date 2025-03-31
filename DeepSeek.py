@@ -19,7 +19,7 @@ def loadModel():
     model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
     model = AutoModelForCausalLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-
+    
     # Pipeline for text generation
     text_generation_pipeline = pipeline(
         model=model,
