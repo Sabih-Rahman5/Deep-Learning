@@ -22,7 +22,14 @@ if knowledgeBase_pdf is not None:
 
 assignment_pdf = st.file_uploader("Upload Assignemnt", type=["pdf"])
 if assignment_pdf is not None:
-    st.write("Assignment uploaded!")
+    save_path = os.path.join("assignment", assignment_pdf.name)
+    os.makedirs("assignment", exist_ok=True)
+    with open(save_path, "wb") as f:
+        f.write(assignment_pdf.read())
+        
+    manager.assignment = save_path
+    st.success("Knowledge Base uploaded!")
+    print(save_path)
 
 
 # Dropdown menu for model selection
@@ -49,7 +56,11 @@ if st.button("Load Model"):
         st.write("Please select a model")
     else:
         if manager.getState() == "loaded":
-            st.write("Unloading model: " + str(manager.getLoadedModel()))
+            if selected_option == manager.getLoadedModel():
+                st.write("Model already loaded")
+            else:
+                st.write("Unloading model: " + str(manager.getLoadedModel()))
+                manager.clearGpu()
         st.write(f"Loading Model: {selected_option}")
         manager.loadModel(selected_option)
 

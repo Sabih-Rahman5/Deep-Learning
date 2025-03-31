@@ -12,6 +12,8 @@ class GPUModelManager:
             self._currentState = "empty"
             self.model = None
             self.knowledge_base = None
+            self.assignment = None
+            
         
         def getState(self):
             return self._currentState
@@ -19,14 +21,7 @@ class GPUModelManager:
         def getLoadedModel(self):
             return self._modelName if self._currentState == "loaded" else None
         
-        def loadModel(self, modelname):
-            if self._currentState == "loaded":
-                if self._modelName == modelname:
-                    print("model already loaded")
-                    return
-                else:
-                    self.clearGpu()
-        
+        def loadModel(self, modelname):        
             self._currentState = "loading"
             self._modelName = modelname
             
