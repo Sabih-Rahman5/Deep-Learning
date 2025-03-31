@@ -1,4 +1,4 @@
-import DeepSeek.py
+import DeepSeek
 from threading import Lock
 from numba import cuda
 
