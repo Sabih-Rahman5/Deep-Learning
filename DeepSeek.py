@@ -7,8 +7,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.schema import Document
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline 
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
