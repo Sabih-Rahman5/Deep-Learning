@@ -37,8 +37,10 @@ options = ["None", "Llama-3.2", "Gemma-3", "DeepSeek-r1"]
 
 
 if state == "empty":
+    print("ui reset - no model loaded")
     selected_option = st.selectbox("Select LLM:", options)
 else:
+    print("ui reset - model loaded")
     selected_option = st.selectbox("Select LLM:", options, index=options.index(manager.getLoadedModel()))
 
 # Function to update status dynamically
