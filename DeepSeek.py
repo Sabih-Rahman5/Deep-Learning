@@ -7,7 +7,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.schema import Document
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline 
+from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import pipeline as hf_pipeline
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
@@ -20,7 +21,7 @@ def loadModel():
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     
     # Pipeline for text generation
-    text_generation_pipeline = pipeline(
+    text_generation_pipeline = hf_pipeline(
         model=model,
         tokenizer=tokenizer,
         task="text-generation",
