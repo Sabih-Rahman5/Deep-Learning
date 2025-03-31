@@ -1,4 +1,6 @@
+import DeepSeek.py
 from threading import Lock
+from numba import cuda
 
 class GPUModelManager:
     _instance = None
@@ -8,6 +10,7 @@ class GPUModelManager:
         def __init__(self):
             self._modelName = ""
             self._currentState = "empty"
+            self.model = None
         
         def getState(self):
             return self._currentState
@@ -22,17 +25,20 @@ class GPUModelManager:
                     return
                 else:
                     self.clearGpu()
-                
-            self._modelName = modelname
+        
             self._currentState = "loading"
-            # Simulate loading process
-            print("loading " + modelname)
-            self._currentState = "loaded"
+            self._modelName = modelname
+            
+            if(modelname == "DeepSeek-r1"):
+                self.model = DeepSeek.loadModel()
+                self._currentState = "loaded"
         
         def clearGpu(self):
             if self._currentState == "loaded":
                 self._currentState = "unloading"
                 print("unloading model: " + str(self._modelName))
+                device = cuda.get_current_device()
+                device.reset()
                 self._modelName = None
                 self._currentState = "empty"
     
