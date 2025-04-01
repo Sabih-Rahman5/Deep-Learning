@@ -1,4 +1,6 @@
 import DeepSeek
+import Llama
+import Gemma
 from threading import Lock
 from numba import cuda
 
@@ -27,6 +29,13 @@ class GPUModelManager:
             
             if(modelname == "DeepSeek-r1"):
                 self.model = DeepSeek.loadModel(self.knowledge_base)
+                self._currentState = "loaded"                
+            if(modelname == "Gemma-3"):
+                self.model = Gemma.loadModel(self.knowledge_base)
+                self._currentState = "loaded"
+                
+            if(modelname == "Llama-3.2"):
+                self.model = Llama.loadModel(self.knowledge_base)
                 self._currentState = "loaded"
         
         def clearGpu(self):
