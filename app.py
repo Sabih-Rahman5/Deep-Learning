@@ -34,14 +34,10 @@ if assignment_pdf is not None:
 
 # Dropdown menu for model selection
 options = ["None", "Llama-3.2", "Gemma-3", "DeepSeek-r1"]
+selected_option = st.selectbox("Select LLM:", options)
 
+    
 
-# if state == "empty":
-#     print("ui reset - no model loaded")
-#     selected_option = st.selectbox("Select LLM:", options)
-# else:
-#     print("ui reset - model loaded")
-#     selected_option = st.selectbox("Select LLM:", options, index=options.index(manager.getLoadedModel()))
 
 # Function to update status dynamically
 def setStatus():
@@ -53,19 +49,30 @@ def setStatus():
     elif manager.getState() == "loaded":
         st.write(manager.getLoadedModel() + " loaded")
 
+
+def buttonClick():
+    
+    if(selected_option == "None"):
+        st.write("Please select a model")
+        return
+
+    if(selected_option == "loading" or selected_option == "unloading"):
+        st.write("Please wait for the model to load/unload")
+        return
+
+    if manager.getState() == "loaded":
+        print("Button clicked")
+        if selected_option == manager.getLoadedModel():
+            st.write("Model already loaded")
+            return
+        else:
+            st.write("Unloading model: " + str(manager.getLoadedModel()))
+            manager.clearGpu()
+          
+    manager.loadModel(selected_option)
+
+
 # Button to trigger model loading/unloading
 if st.button("Load Model"):
-    if selected_option == "None":
-        st.write("Please select a model")
-    else:
-        if manager.getState() == "loaded":
-            if selected_option == manager.getLoadedModel():
-                st.write("Model already loaded")
-            else:
-                st.write("Unloading model: " + str(manager.getLoadedModel()))
-                manager.clearGpu()
-        st.write(f"Loading Model: {selected_option}")
-        manager.loadModel(selected_option)
-        st.write(manager.getLoadedModel() + " loaded")
-
-setStatus()
+    buttonClick()
+    setStatus()
