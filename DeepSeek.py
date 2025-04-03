@@ -17,12 +17,6 @@ from langchain_huggingface import HuggingFacePipeline
 
 def loadModel(knowledge_base=None):
     
-    model_name = None
-    model = None
-    tokenizer = None
-    text_generation_pipeline = None
-    llm_pipeline = None
-    
     model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
     model = AutoModelForCausalLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)

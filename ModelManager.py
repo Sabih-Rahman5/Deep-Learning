@@ -1,8 +1,8 @@
 import DeepSeek
 import Llama
 import Gemma
-from threading import Lock
-from numba import cuda
+from threading import Lock  
+import torch
 
 class GPUModelManager:
     _instance = None
@@ -42,9 +42,17 @@ class GPUModelManager:
             if self._currentState == "loaded":
                 self._currentState = "unloading"
                 print("unloading model: " + str(self._modelName))
-                device = cuda.get_current_device()
-                device.reset()
-                self._modelName = None
+                
+                del self.model
+                self.model = None
+
+                torch.cuda.empty_cache()
+                torch.cuda.ipc_collect()
+                torch.cuda.reset_peak_memory_stats()
+                torch.cuda.synchronize()
+                
+                
+
                 self._currentState = "empty"
     
     
