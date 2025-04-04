@@ -52,7 +52,8 @@ class GPUModelManager:
                 self._currentState = "empty"
     
         def runInference(self):
-            result = self.model.invoke("What are DeepSeek-R1-Zero and DeepSeek-R1?")
+            prompt = "What are DeepSeek-R1-Zero and DeepSeek-R1?"
+            result = self.model.invoke(str(prompt))
             print(result)
 
     
