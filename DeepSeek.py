@@ -66,7 +66,10 @@ def loadModel(knowledge_base=None):
             | llm_chain
             )
     else:
-        
+        prompt_template = """
+        You are a professional AI researcher, that helps in study by answering questions.
+        Question: {question}
+        """
         prompt = PromptTemplate( input_variables=["question"], template=prompt_template,)
         
         llm_chain = prompt | llm_pipeline | StrOutputParser()

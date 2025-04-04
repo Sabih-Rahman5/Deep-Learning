@@ -67,7 +67,7 @@ def loadModel(knowledge_base=None):
             )
     else:
         prompt_template = """
-        You are a professional AI researcher, give an help in study. Use the following context to answer the questions
+        You are a professional AI researcher, that helps in study by answering questions.
         Question: {question}
         """
         prompt = PromptTemplate( input_variables=["question"], template=prompt_template,)
