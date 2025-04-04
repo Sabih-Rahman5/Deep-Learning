@@ -46,9 +46,9 @@ class GPUModelManager:
                 self.model = None
 
                 torch.cuda.empty_cache()
-                torch.cuda.ipc_collect()
-                torch.cuda.reset_peak_memory_stats()
-                torch.cuda.synchronize()
+                # torch.cuda.ipc_collect()
+                # torch.cuda.reset_peak_memory_stats()
+                # torch.cuda.synchronize()
                 self._currentState = "empty"
     
         def runInference(self):
