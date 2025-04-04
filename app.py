@@ -7,28 +7,39 @@ st.title("Test App")
 manager = GPUModelManager().getInstance()
 state = manager.getState()
 
+# knowledgeBase uploader
 knowledgeBase_pdf = st.file_uploader("Upload Knowledge Base", type=["pdf"])
-
-
 if knowledgeBase_pdf is not None:
     save_path = os.path.join("knowledge_base", knowledgeBase_pdf.name)
     os.makedirs("knowledge_base", exist_ok=True)
+    
+    for file_name in os.listdir("knowledge_base"):
+        file_path = os.path.join("knowledge_base", file_name)
+        os.remove(file_path)
+
     with open(save_path, "wb") as f:
         f.write(knowledgeBase_pdf.read())
         
     manager.knowledge_base = save_path
-    st.success("Knowledge Base uploaded!")
+    st.success("Knowledge Base updated!")
     print(save_path)
 
+
+# assignment uploader
 assignment_pdf = st.file_uploader("Upload Assignemnt", type=["pdf"])
 if assignment_pdf is not None:
     save_path = os.path.join("assignment", assignment_pdf.name)
     os.makedirs("assignment", exist_ok=True)
+    
+    for file_name in os.listdir("assignment"):
+        file_path = os.path.join("assignment", file_name)
+        os.remove(file_path)
+    
     with open(save_path, "wb") as f:
         f.write(assignment_pdf.read())
         
     manager.assignment = save_path
-    st.success("Knowledge Base uploaded!")
+    st.success("assignment uploaded!")
     print(save_path)
 
 
@@ -50,7 +61,20 @@ def setStatus():
         st.write(manager.getLoadedModel() + " loaded")
 
 
-def buttonClick():
+def runButtonClick():
+    if(manager.getState() == "empty"):
+        st.write("No model loaded")
+        return
+    if(manager.getState() == "loading"):
+        st.write("Please wait for the model to load")
+        return
+    if(manager.getState() == "loaded"):
+        st.write("Running inference...")
+        manager.runInference()
+    
+        
+
+def loadButtonClick():
     
     if(selected_option == "None"):
         st.write("Please select a model")
@@ -74,5 +98,14 @@ def buttonClick():
 
 # Button to trigger model loading/unloading
 if st.button("Load Model"):
-    buttonClick()
+    loadButtonClick()
     setStatus()
+    
+if st.button("Run inference"):
+    runButtonClick()
+    
+    
+    
+    
+    
+    # streamlit run app.py --server.address 0.0.0.0 --server.port 80

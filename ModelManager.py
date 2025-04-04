@@ -15,8 +15,7 @@ class GPUModelManager:
             self.model = None
             self.knowledge_base = None
             self.assignment = None
-            
-        
+
         def getState(self):
             return self._currentState
         
@@ -50,10 +49,14 @@ class GPUModelManager:
                 torch.cuda.ipc_collect()
                 torch.cuda.reset_peak_memory_stats()
                 torch.cuda.synchronize()
-                
-                
-
                 self._currentState = "empty"
+    
+        def runInference(self):
+            result = self.model.invoke("What are DeepSeek-R1-Zero and DeepSeek-R1?")
+            print(result)
+
+    
+    
     
     
     @classmethod
