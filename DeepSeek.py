@@ -64,10 +64,7 @@ def loadModel(knowledge_base=None):
             )
 
     else:
-        pipeline = (
-            {"question": RunnablePassthrough()}
-            | llm_pipeline
-            )
+        pipeline = ( {"question": RunnablePassthrough()} | llm_chain)
 
 
     return pipeline
