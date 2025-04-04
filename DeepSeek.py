@@ -37,10 +37,9 @@ def loadModel(knowledge_base=None):
 
     # Prompt template to match desired output format
     prompt_template = """
-    You are a professional AI researcher, give an help in study. Use the following context to answer the question using information provided by the paper:
-
+    You are an AI teaching assistant. Use the following context, question and student answer to provide grading and constructive feedback. 
+    Ensure that the feedback includes suggestions for improvement and accuracy.
     {context}
-
     Question: {question}
     """
 
@@ -67,13 +66,12 @@ def loadModel(knowledge_base=None):
             )
     else:
         prompt_template = """
-        You are a professional AI researcher, that helps in study by answering questions.
+        You are an AI teaching assistant. Use the following question and student answer to provide grading and constructive feedback. 
+        Ensure that the feedback includes suggestions for improvement and accuracy.
         Question: {question}
         """
         prompt = PromptTemplate( input_variables=["question"], template=prompt_template,)
-        
         llm_chain = prompt | llm_pipeline | StrOutputParser()
-        
         pipeline = ( {"question": RunnablePassthrough()} | llm_chain)
 
 
