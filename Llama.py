@@ -37,19 +37,18 @@ def loadModel(knowledge_base=None):
     llm_pipeline = HuggingFacePipeline(pipeline=text_generation_pipeline)
 
     # Prompt template to match desired output format
-    prompt_template = """
-    You are a professional AI researcher, give an help in study. Use the following context to answer the question using information provided by the paper:
 
-    {context}
-
-    Question: {question}
-    """
 
     
     if(knowledge_base != None):
         loader = PyPDFLoader(knowledge_base)
         docs = loader.load()
 
+        prompt_template = """
+        You are a professional AI researcher, give an help in study. Use the following context to answer the question using information provided by the paper:
+        {context}
+        Question: {question}
+        """
         prompt = PromptTemplate(
         input_variables=["context", "question"],
         template=prompt_template,)
@@ -67,7 +66,10 @@ def loadModel(knowledge_base=None):
             | llm_chain
             )
     else:
-        
+        prompt_template = """
+        You are a professional AI researcher, give an help in study. Use the following context to answer the questions
+        Question: {question}
+        """
         prompt = PromptTemplate( input_variables=["question"], template=prompt_template,)
         
         llm_chain = prompt | llm_pipeline | StrOutputParser()
