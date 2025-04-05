@@ -122,8 +122,8 @@ class GPUModelManager:
                     pdf.multi_cell(0, 10, answer)
                     pdf.ln(2)
                     
-                    # feedback = self.model.invoke(str(question + "\n" +answer))
-                    feedback = "hellost"
+                    feedback = self.model.invoke(str(question + "\n" +answer))
+                    
                     
                     # Add Feedback Heading
                     pdf.set_font("Arial", "B", 12)
