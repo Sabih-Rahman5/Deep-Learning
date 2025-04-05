@@ -3,7 +3,10 @@ import Llama
 import Gemma
 from threading import Lock  
 import torch
+
+from pypdf import PdfReader
 from fpdf import FPDF
+import re
 
 class GPUModelManager:
     _instance = None
@@ -52,16 +55,15 @@ class GPUModelManager:
                 # torch.cuda.synchronize()
                 self._currentState = "empty"
     
-    
-    
-        def extract_text_from_pdf(pdf_path):
-            reader = PdfReader(pdf_path)
+        def extract_text_from_pdf(self):
+            print(self.assignment)
+            reader = PdfReader(self.assignment)
             text = ""
             for page in reader.pages:
                 text += page.extract_text() + "\n"
             return text
         
-        def extract_qa(text):
+        def extract_qa(self, text):
             # This regex looks for "question <number>:" and then "answer <same number>:".
             # It uses a backreference (\1) to ensure that the question and answer numbers match.
             pattern = re.compile(
@@ -81,53 +83,23 @@ class GPUModelManager:
             return qa_dict
             
         # Example function to create the PDF
-        def create_pdf(qa_pairs, feedback, output_filename="output.pdf"):
-            pdf = FPDF()
-            pdf.add_page()
-            
-            # Set a base font and size
-            pdf.set_font("Arial", size=12)
-            
-            # Loop through the question-answer pairs
-            for number in sorted(qa_pairs, key=int):  # assuming keys are numeric strings
-                qa = qa_pairs[number]
-                
-                # Add Question Heading
-                pdf.set_font("Arial", "B", 12)
-                pdf.cell(0, 10, f"Question {number}:", ln=True)
-                # Add Question Text
-                pdf.set_font("Arial", "", 12)
-                pdf.multi_cell(0, 10, qa["question"])
-                pdf.ln(2)  # small gap
-                
-                # Add Answer Heading
-                pdf.set_font("Arial", "B", 12)
-                pdf.cell(0, 10, f"Answer {number}:", ln=True)
-                # Add Answer Text
-                pdf.set_font("Arial", "", 12)
-                pdf.multi_cell(0, 10, qa["answer"])
-                pdf.ln(5)  # gap between entries
-
-            # Finally, add the Feedback section
-            pdf.set_font("Arial", "B", 12)
-            pdf.cell(0, 10, "Feedback:", ln=True)
-            pdf.set_font("Arial", "", 12)
-            pdf.multi_cell(0, 10, feedback)
-            
-            # Save the PDF to a file
-            pdf.output(output_filename)
+        
     
     
         def runInference(self):
+            print("sd")
             
-            pdf_text = extract_text_from_pdf(self.assignment)
-            qa_pairs = extract_qa(pdf_text)
+            pdf_text = self.extract_text_from_pdf()
+            qa_pairs = self.extract_qa(pdf_text)
             
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
             
-            
+            # for number in sorted(qa_pairs):
+            #     qa = qa_pairs[number]
+            #     print(f"Question {number}: {qa['question']}")
+            #     print(f"Answer {number}: {qa['answer']}\n")
             
             for number in sorted(qa_pairs, key=int):  # assuming keys are numeric strings
                 qa = qa_pairs[number]

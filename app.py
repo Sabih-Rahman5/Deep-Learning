@@ -65,9 +65,13 @@ def runButtonClick():
     if(manager.getState() == "empty"):
         st.write("No model loaded")
         return
-    if(manager.getState() == "loading"):
+    if(manager.getState() == "loading" or manager.getState() == "unloading"):
         st.write("Please wait for the model to load")
         return
+    if(manager.assignment is None):
+        st.write("Please upload an assignment")
+        return
+    
     if(manager.getState() == "loaded"):
         st.write("Running inference...")
         manager.runInference()
@@ -92,7 +96,6 @@ def loadButtonClick():
         else:
             st.write("Unloading model: " + str(manager.getLoadedModel()))
             manager.clearGpu()
-          
     manager.loadModel(selected_option)
 
 
@@ -103,6 +106,7 @@ if st.button("Load Model"):
     
 if st.button("Run inference"):
     runButtonClick()
+    manager.runInference()
     
     
     
