@@ -87,58 +87,64 @@ class GPUModelManager:
     
     
         def runInference(self):
-            print("sd")
-            
-            pdf_text = self.extract_text_from_pdf()
-            qa_pairs = self.extract_qa(pdf_text)
-            
-            pdf = FPDF()
-            pdf.add_page()
-            pdf.set_font("Arial", size=12)
-            
-            # for number in sorted(qa_pairs):
-            #     qa = qa_pairs[number]
-            #     print(f"Question {number}: {qa['question']}")
-            #     print(f"Answer {number}: {qa['answer']}\n")
-            
-            for number in sorted(qa_pairs, key=int):  # assuming keys are numeric strings
-                qa = qa_pairs[number]
-                question = qa["question"]
-                answer = qa["answer"]
+            try:
+                pdf_text = self.extract_text_from_pdf()
+                qa_pairs = self.extract_qa(pdf_text)
                 
+                pdf = FPDF()
+                pdf.add_page()
+                pdf.set_font("Arial", size=12)
                 
-                # Add Question Heading
-                pdf.set_font("Arial", "B", 12)
-                pdf.cell(0, 10, f"Question {number}:", ln=True)
-                # Add Question Text
-                pdf.set_font("Arial", "", 12)
-                pdf.multi_cell(0, 10, question)
-                pdf.ln(2)
+                # for number in sorted(qa_pairs):
+                #     qa = qa_pairs[number]
+                #     print(f"Question {number}: {qa['question']}")
+                #     print(f"Answer {number}: {qa['answer']}\n")
                 
-                # Add Answer Heading
-                pdf.set_font("Arial", "B", 12)
-                pdf.cell(0, 10, f"Answer {number}:", ln=True)
-                # Add Answer Text
-                pdf.set_font("Arial", "", 12)
-                pdf.multi_cell(0, 10, answer)
-                pdf.ln(2)
-                
-                feedback = self.model.invoke(str(question + "\n" +answer))
-                 # Add Feedback Heading
-                pdf.set_font("Arial", "B", 12)
-                pdf.cell(0, 10, f"Feedback {number}:", ln=True)
-                # Add Feedback Text
-                pdf.set_font("Arial", "", 12)
-                pdf.multi_cell(0, 10, feedback)
-                pdf.ln(5)  # Add a gap before next question-answer pair
+                for number in sorted(qa_pairs, key=int):  # assuming keys are numeric strings
+                    qa = qa_pairs[number]
+                    question = qa["question"]
+                    answer = qa["answer"]
                     
-            # for number in sorted(qa_pairs):
-            #     qa = qa_pairs[number]
-            #     print(f"Question {number}: {qa['question']}")
-            #     print(f"Answer {number}: {qa['answer']}\n")
+                    
+                    # Add Question Heading
+                    pdf.set_font("Arial", "B", 12)
+                    pdf.cell(0, 10, f"Question {number}:", ln=True)
+                    # Add Question Text
+                    pdf.set_font("Arial", "", 12)
+                    pdf.multi_cell(0, 10, question)
+                    pdf.ln(2)
+                    
+                    # Add Answer Heading
+                    pdf.set_font("Arial", "B", 12)
+                    pdf.cell(0, 10, f"Answer {number}:", ln=True)
+                    # Add Answer Text
+                    pdf.set_font("Arial", "", 12)
+                    pdf.multi_cell(0, 10, answer)
+                    pdf.ln(2)
+                    
+                    # feedback = self.model.invoke(str(question + "\n" +answer))
+                    feedback = "hellost"
+                    
+                    # Add Feedback Heading
+                    pdf.set_font("Arial", "B", 12)
+                    pdf.cell(0, 10, f"Feedback {number}:", ln=True)
+                    # Add Feedback Text
+                    pdf.set_font("Arial", "", 12)
+                    pdf.multi_cell(0, 10, feedback)
+                    pdf.ln(5)  # Add a gap before next question-answer pair
+                        
+                # for number in sorted(qa_pairs):
+                #     qa = qa_pairs[number]
+                #     print(f"Question {number}: {qa['question']}")
+                #     print(f"Answer {number}: {qa['answer']}\n")
+                
+                
+                pdf.output("output.pdf")
+                return True
             
-            
-            pdf.output("output.pdf")
+            except Exception as e:
+                print(f"Error: {e}")
+                return False
             
             
             

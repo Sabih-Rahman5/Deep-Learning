@@ -74,7 +74,20 @@ def runButtonClick():
     
     if(manager.getState() == "loaded"):
         st.write("Running inference...")
-        manager.runInference()
+        if(manager.runInference()):
+            st.write("Inference completed")
+            with open("output.pdf", "rb") as f:
+                pdf_data = f.read()
+                
+            st.download_button(
+            label="📄 Download PDF",
+            data=pdf_data,
+            file_name="result.pdf",
+            mime="application/pdf"
+        )
+        else:
+            st.write("Inference failed")
+        
     
         
 
