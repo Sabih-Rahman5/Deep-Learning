@@ -119,7 +119,6 @@ if st.button("Load Model"):
     
 if st.button("Run inference"):
     runButtonClick()
-    manager.runInference()
     
     
     
