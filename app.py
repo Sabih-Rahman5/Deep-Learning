@@ -4,7 +4,7 @@ import os
 import fitz  # PyMuPDF- pdf editor and reader
 
 # Streamlit app
-#st.title("Grader App")
+st.title("Grader App")
 
 st.set_page_config(page_title="Grader App", page_icon="assets/personal.png")
 manager = GPUModelManager().getInstance()
@@ -69,9 +69,9 @@ if assignment_pdf is not None:
 
         edited_text = st.text_area("Edit Assignment Content", full_text, height=500)
 
-        print(edited_text)
         if st.button("💾 Save Edited Assignment"):
             # Save edited content back to the same path
+            print(edited_text)            
             new_doc = fitz.open()  # Create a new empty PDF
             lines = edited_text.split('\n')
             page = new_doc.new_page()
