@@ -10,6 +10,17 @@ st.title("Grader App")
 manager = GPUModelManager().getInstance()
 state = manager.getState()
 
+
+
+
+# --- Initialize session state flags ---
+if "edit_assignment_mode" not in st.session_state:
+    st.session_state.edit_assignment_mode = False
+
+if "edited_assignment_text" not in st.session_state:
+    st.session_state.edited_assignment_text = ""
+
+
 # knowledgeBase uploader
 knowledgeBase_pdf = st.file_uploader("Upload Knowledge Base", type=["pdf"])
 if knowledgeBase_pdf is not None:
@@ -49,47 +60,59 @@ if knowledgeBase_pdf is not None:
 assignment_pdf = st.file_uploader("Upload Assignment", type=["pdf"], key="assign_upload")
 if assignment_pdf is not None:
     save_path = os.path.join("assignment", assignment_pdf.name)
-    os.makedirs("assignment", exist_ok=True)
-    
+
+    # Clear previous files
     for file_name in os.listdir("assignment"):
         file_path = os.path.join("assignment", file_name)
         os.remove(file_path)
-    
+
+    # Save uploaded PDF
     with open(save_path, "wb") as f:
         f.write(assignment_pdf.read())
-        
+
     manager.assignment = save_path
     st.success("Assignment uploaded!")
-    
-    # --- Editor button ---
+
+    # Show Edit button
     if st.button("📝 Edit Assignment"):
+        # Extract text once and store it in session state
         doc = fitz.open(save_path)
         full_text = "\n\n".join([page.get_text() for page in doc])
         doc.close()
 
-        edited_text = st.text_area("Edit Assignment Content", full_text, height=500)
-
-        if st.button("💾 Save Edited Assignment"):
-            # Save edited content back to the same path
-            print("skdfnskdjfnkjsdfnkjsdfnkjsdnfkjsnfkjnkjkkkbbkbsjkjsdbvdvskjb")            
-            new_doc = fitz.open()  # Create a new empty PDF
-            lines = edited_text.split('\n')
-            page = new_doc.new_page()
-            y = 72  # Starting y-position
-            for line in lines:
-                page.insert_text((72, y), line, fontsize=12)
-                y += 15  # Line spacing
-                if y > 800:  # Page overflow, create new page
-                    page = new_doc.new_page()
-                    y = 72
+        st.session_state.edited_assignment_text = full_text
+        st.session_state.edit_assignment_mode = True
 
 
-            print(save_path)
-            new_doc.save(save_path)
-            new_doc.close()
+# --- PDF Text Editor Interface ---
+if st.session_state.edit_assignment_mode:
+    st.subheader("📄 PDF Text Editor")
+    edited_text = st.text_area("Edit Assignment Content", st.session_state.edited_assignment_text, height=500)
 
-            st.success(f"Assignment PDF updated and saved to: {save_path}")
+    # Save edited version
+    if st.button("💾 Save Edited Assignment"):
+        new_doc = fitz.open()
+        lines = edited_text.split('\n')
+        page = new_doc.new_page()
+        y = 72  # Starting Y position
 
+        for line in lines:
+            page.insert_text((72, y), line, fontsize=12)
+            y += 15
+            if y > 800:
+                page = new_doc.new_page()
+                y = 72
+
+        new_doc.save(manager.assignment)  # Overwrite original
+        new_doc.close()
+
+        st.success(f"✅ Assignment PDF updated and saved to: {manager.assignment}")
+        st.session_state.edit_assignment_mode = False  # Exit editor
+
+    # Optional: Cancel editing
+    if st.button("❌ Cancel Editing"):
+        st.session_state.edit_assignment_mode = False
+        st.info("Editing canceled.")
 
 
 
