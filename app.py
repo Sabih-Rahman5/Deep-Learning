@@ -62,6 +62,9 @@ if assignment_pdf is not None:
     save_path = os.path.join("assignment", assignment_pdf.name)
 
     # Clear previous files
+    if not os.path.exists("assignment"):
+        os.makedirs("assignment")
+    
     for file_name in os.listdir("assignment"):
         file_path = os.path.join("assignment", file_name)
         os.remove(file_path)
