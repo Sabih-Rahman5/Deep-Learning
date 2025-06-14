@@ -1,6 +1,7 @@
 import streamlit as st
 from ModelManager import GPUModelManager
 import os
+import fitz  # PyMuPDF- pdf editor and reader
 
 # Streamlit app
 st.title("Test App")
@@ -8,7 +9,24 @@ manager = GPUModelManager().getInstance()
 state = manager.getState()
 
 # knowledgeBase uploader
-knowledgeBase_pdf = st.file_uploader("Upload Knowledge Base", type=["pdf"])
+# knowledgeBase_pdf = st.file_uploader("Upload Knowledge Base", type=["pdf"])
+# if knowledgeBase_pdf is not None:
+#     save_path = os.path.join("knowledge_base", knowledgeBase_pdf.name)
+#     os.makedirs("knowledge_base", exist_ok=True)
+    
+#     for file_name in os.listdir("knowledge_base"):
+#         file_path = os.path.join("knowledge_base", file_name)
+#         os.remove(file_path)
+
+#     with open(save_path, "wb") as f:
+#         f.write(knowledgeBase_pdf.read())
+        
+#     manager.knowledge_base = save_path
+#     st.success("Knowledge Base updated!")
+#     print(save_path)
+
+
+knowledgeBase_pdf = st.file_uploader("Upload Knowledge Base", type=["pdf"], key="kb_upload")
 if knowledgeBase_pdf is not None:
     save_path = os.path.join("knowledge_base", knowledgeBase_pdf.name)
     os.makedirs("knowledge_base", exist_ok=True)
@@ -22,11 +40,42 @@ if knowledgeBase_pdf is not None:
         
     manager.knowledge_base = save_path
     st.success("Knowledge Base updated!")
-    print(save_path)
+    
+    # --- Editor button ---
+    if st.button("📝 Edit Knowledge Base"):
+        doc = fitz.open(save_path)
+        full_text = "\n\n".join([page.get_text() for page in doc])
+        edited_text = st.text_area("Edit Knowledge Base Content", full_text, height=500)
+        
+        if st.button("💾 Save Edited Knowledge Base"):
+            new_doc = fitz.open()
+            new_page = new_doc.new_page()
+            new_page.insert_text((72, 72), edited_text, fontsize=12)
+            new_doc.save(save_path)
+            new_doc.close()
+            st.success("Knowledge Base PDF updated.")
+
 
 
 # assignment uploader
-assignment_pdf = st.file_uploader("Upload Assignemnt", type=["pdf"])
+# assignment_pdf = st.file_uploader("Upload Assignemnt", type=["pdf"])
+# if assignment_pdf is not None:
+#     save_path = os.path.join("assignment", assignment_pdf.name)
+#     os.makedirs("assignment", exist_ok=True)
+    
+#     for file_name in os.listdir("assignment"):
+#         file_path = os.path.join("assignment", file_name)
+#         os.remove(file_path)
+    
+#     with open(save_path, "wb") as f:
+#         f.write(assignment_pdf.read())
+        
+#     manager.assignment = save_path
+#     st.success("assignment uploaded!")
+#     print(save_path)
+
+# assignment uploader
+assignment_pdf = st.file_uploader("Upload Assignment", type=["pdf"], key="assign_upload")
 if assignment_pdf is not None:
     save_path = os.path.join("assignment", assignment_pdf.name)
     os.makedirs("assignment", exist_ok=True)
@@ -39,8 +88,24 @@ if assignment_pdf is not None:
         f.write(assignment_pdf.read())
         
     manager.assignment = save_path
-    st.success("assignment uploaded!")
-    print(save_path)
+    st.success("Assignment uploaded!")
+    
+    # --- Editor button ---
+    if st.button("📝 Edit Assignment"):
+        doc = fitz.open(save_path)
+        full_text = "\n\n".join([page.get_text() for page in doc])
+        edited_text = st.text_area("Edit Assignment Content", full_text, height=500)
+        
+        if st.button("💾 Save Edited Assignment"):
+            new_doc = fitz.open()
+            new_page = new_doc.new_page()
+            new_page.insert_text((72, 72), edited_text, fontsize=12)
+            new_doc.save(save_path)
+            new_doc.close()
+            st.success("Assignment PDF updated.")
+
+
+
 
 
 # Dropdown menu for model selection
