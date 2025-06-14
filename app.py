@@ -25,7 +25,7 @@ if knowledgeBase_pdf is not None:
         
     manager.knowledge_base = save_path
     st.success("Knowledge Base updated!")
-    print(save_path)
+    #print(save_path)
 
 
 # assignment uploader
