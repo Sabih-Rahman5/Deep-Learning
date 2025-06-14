@@ -4,9 +4,9 @@ import os
 import fitz  # PyMuPDF- pdf editor and reader
 
 # Streamlit app
+st.set_page_config(page_title="Grader App", page_icon="assets/personal.png")
 st.title("Grader App")
 
-st.set_page_config(page_title="Grader App", page_icon="assets/personal.png")
 manager = GPUModelManager().getInstance()
 state = manager.getState()
 
