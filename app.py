@@ -71,7 +71,7 @@ if assignment_pdf is not None:
 
         if st.button("💾 Save Edited Assignment"):
             # Save edited content back to the same path
-            print(edited_text)            
+            print("skdfnskdjfnkjsdfnkjsdfnkjsdnfkjsnfkjnkjkkkbbkbsjkjsdbvdvskjb")            
             new_doc = fitz.open()  # Create a new empty PDF
             lines = edited_text.split('\n')
             page = new_doc.new_page()
