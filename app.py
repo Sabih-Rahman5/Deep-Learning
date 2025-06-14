@@ -73,7 +73,8 @@ if assignment_pdf is not None:
             # Save edited content back to the same path
             new_doc = fitz.open()  # Create a new empty PDF
             lines = edited_text.split('\n')
-
+            
+            print(lines)
             page = new_doc.new_page()
             y = 72  # Starting y-position
             for line in lines:
