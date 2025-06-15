@@ -22,6 +22,11 @@ def debug_context_printer(context_docs):
         print(f"\nChunk {i+1}:\n{doc.page_content}\n")
     return context_docs
 
+def debug_prompt_printer(inputs):
+    print("\n\n=== Final Prompt Sent to LLM ===")
+    print(inputs)
+    return inputs
+
 
 def loadModel(knowledge_base=None):
     
@@ -70,16 +75,20 @@ def loadModel(knowledge_base=None):
 
        
         #! Debugging context retrieval
-        # pipeline = ({"context": retriever | RunnableLambda(debug_context_printer),
-        #              "question": RunnablePassthrough()
-        #              }
-        #             | llm_chain
-        #             )
+        pipeline = ({"context": retriever | RunnableLambda(debug_context_printer),
+                     "question": RunnablePassthrough()
+                     }
+                    | RunnableLambda(debug_prompt_printer)
+                    | llm_chain
+                    )
         
-        pipeline = (
-            {"context": retriever, "question": RunnablePassthrough()}
-            | llm_chain
-            )
+        
+        
+        
+        # pipeline = (
+        #     {"context": retriever, "question": RunnablePassthrough()}
+        #     | llm_chain
+        #     )
         
         
         
@@ -89,9 +98,17 @@ def loadModel(knowledge_base=None):
         Ensure that the feedback includes suggestions for improvement and accuracy.
         Question: {question}
         """
+        
+        
+                #! Debugging context retrieval
+
+        
         prompt = PromptTemplate( input_variables=["question"], template=prompt_template,)
         llm_chain = prompt | llm_pipeline | StrOutputParser()
-        pipeline = ( {"question": RunnablePassthrough()} | llm_chain)
+        pipeline = ( {"question": RunnablePassthrough()} | llm_chain, )
         
+        pipeline = ({"context": retriever | RunnableLambda(debug_context_printer),
+                     "question": RunnablePassthrough()
+                     } | llm_chain)
     
     return pipeline
