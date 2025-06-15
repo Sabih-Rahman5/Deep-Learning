@@ -43,7 +43,7 @@ def loadModel(knowledge_base=None):
         do_sample=True,
         repetition_penalty=1.1,
         return_full_text=False,
-        max_new_tokens=500,
+        max_new_tokens=1024,
     )
 
     llm_pipeline = HuggingFacePipeline(pipeline=text_generation_pipeline, verbose = True)

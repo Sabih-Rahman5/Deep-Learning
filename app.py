@@ -59,11 +59,15 @@ if knowledgeBase_pdf is not None:
 
 
 # assignment uploader
-if(st.session_state.edited_assignment_text == ""):
-    assignment_pdf = st.file_uploader("Upload Assignment", type=["pdf"], key="assign_upload")
-else:
-    print("returned")
-    assignment_pdf = None
+# if(st.session_state.edited_assignment_text == ""):
+    
+# else:
+#     print("returned")
+#     assignment_pdf = None
+
+assignment_pdf = st.file_uploader("Upload Assignment", type=["pdf"], key="assign_upload")
+
+print("Assignment PDF:", assignment_pdf)
 
 
 if assignment_pdf is not None:
