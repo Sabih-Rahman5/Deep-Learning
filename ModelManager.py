@@ -8,6 +8,10 @@ from pypdf import PdfReader
 from fpdf import FPDF
 import re
 
+def sanitize_text(text):
+    return text.encode('latin-1', errors='replace').decode('latin-1')
+
+
 class GPUModelManager:
     _instance = None
     _lock = Lock()
@@ -115,7 +119,7 @@ class GPUModelManager:
                     pdf.cell(0, 10, f"Question {number}:", ln=True)
                     # Add Question Text
                     pdf.set_font("Arial", "", 12)
-                    pdf.multi_cell(0, 10, question)
+                    pdf.multi_cell(0, 10, sanitize_text(question))
                     pdf.ln(2)
                     
                     # Add Answer Heading
@@ -123,7 +127,7 @@ class GPUModelManager:
                     pdf.cell(0, 10, f"Answer {number}:", ln=True)
                     # Add Answer Text
                     pdf.set_font("Arial", "", 12)
-                    pdf.multi_cell(0, 10, answer)
+                    pdf.multi_cell(0, 10, sanitize_text(answer))
                     pdf.ln(2)
                     
                     feedback = self.model.invoke(str(question + "\n" +answer))
@@ -134,9 +138,8 @@ class GPUModelManager:
                     pdf.cell(0, 10, f"Feedback {number}:", ln=True)
                     # Add Feedback Text
                     pdf.set_font("Arial", "", 12)
-                    pdf.multi_cell(0, 10, feedback)
+                    pdf.multi_cell(0, 10, sanitize_text(feedback))
                     pdf.ln(5)  # Add a gap before next question-answer pair
-                        
                         
                         
                     if progress_callback is not None:
