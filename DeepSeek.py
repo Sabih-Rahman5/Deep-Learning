@@ -65,7 +65,7 @@ def loadModel(knowledge_base=None):
             | llm_chain
             )
         
-    print("Retrieved Context Prompt:", prompt_template)
+        print("Retrieved Context Prompt:", prompt_template)
 
     else:
         prompt_template = """
