@@ -68,11 +68,21 @@ def loadModel(knowledge_base=None):
         db = FAISS.from_documents(chunked_docs, HuggingFaceEmbeddings(model_name='BAAI/bge-base-en-v1.5'))
         retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 3})
 
-        pipeline = ({"context": retriever | RunnableLambda(debug_context_printer),
-                     "question": RunnablePassthrough()
-                     }
-                    | llm_chain
-                    )
+       
+        #! Debugging context retrieval
+        # pipeline = ({"context": retriever | RunnableLambda(debug_context_printer),
+        #              "question": RunnablePassthrough()
+        #              }
+        #             | llm_chain
+        #             )
+        
+        pipeline = (
+            {"context": retriever, "question": RunnablePassthrough()}
+            | llm_chain
+            )
+        
+        
+        
     else:
         prompt_template = """
         You are an AI teaching assistant. Use the following question and student answer to provide grading and constructive feedback. 
