@@ -56,11 +56,19 @@ if knowledgeBase_pdf is not None:
 #     st.success("assignment uploaded!")
 #     print(save_path)
 
+
+
 # assignment uploader
-assignment_pdf = st.file_uploader("Upload Assignment", type=["pdf"], key="assign_upload")
+if(st.session_state.edited_assignment_text == ""):
+    assignment_pdf = st.file_uploader("Upload Assignment", type=["pdf"], key="assign_upload")
+else:
+    print("returned")
+    assignment_pdf = None
+
+
 if assignment_pdf is not None:
     save_path = os.path.join("assignment", assignment_pdf.name)
-
+    print ("Saving assignment to:", save_path)
     # Clear previous files
     if not os.path.exists("assignment"):
         os.makedirs("assignment")
@@ -78,6 +86,7 @@ if assignment_pdf is not None:
 
     # Show Edit button
     if st.button("📝 Edit Assignment"):
+        print("Edit button clicked")
         # Extract text once and store it in session state
         doc = fitz.open(save_path)
         full_text = "\n\n".join([page.get_text() for page in doc])
@@ -108,6 +117,7 @@ if st.session_state.edit_assignment_mode:
 
         new_doc.save(manager.assignment)  # Overwrite original
         new_doc.close()
+        assignment_pdf = new_doc
 
         st.success(f"✅ Assignment PDF updated and saved to: {manager.assignment}")
         st.session_state.edit_assignment_mode = False  # Exit editor
@@ -119,14 +129,11 @@ if st.session_state.edit_assignment_mode:
 
 
 
-
 # Dropdown menu for model selection
 options = ["None", "Llama-3.2", "Gemma-3", "DeepSeek-r1"]
 selected_option = st.selectbox("Select LLM:", options)
 
     
-
-
 # Function to update status dynamically
 def setStatus():
     st.empty()
