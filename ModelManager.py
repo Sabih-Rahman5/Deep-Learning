@@ -102,6 +102,9 @@ class GPUModelManager:
                 
                 total = len(qa_pairs)
                 for i, number in enumerate(sorted(qa_pairs, key=int)):  # assuming keys are numeric strings
+                    
+                    print(f"Processing Question {number}...")
+                    
                     qa = qa_pairs[number]
                     question = qa["question"]
                     answer = qa["answer"]
@@ -138,10 +141,7 @@ class GPUModelManager:
                         
                     if progress_callback is not None:
                         progress_callback((i + 1) / total)
-                # for number in sorted(qa_pairs):
-                #     qa = qa_pairs[number]
-                #     print(f"Question {number}: {qa['question']}")
-                #     print(f"Answer {number}: {qa['answer']}\n")
+
                 
                 
                 pdf.output("output.pdf")
