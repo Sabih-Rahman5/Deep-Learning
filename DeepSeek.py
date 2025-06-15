@@ -64,6 +64,9 @@ def loadModel(knowledge_base=None):
             {"context": retriever, "question": RunnablePassthrough()}
             | llm_chain
             )
+        
+    print("Retrieved Context Prompt:", prompt_template)
+
     else:
         prompt_template = """
         You are an AI teaching assistant. Use the following question and student answer to provide grading and constructive feedback. 
@@ -73,6 +76,6 @@ def loadModel(knowledge_base=None):
         prompt = PromptTemplate( input_variables=["question"], template=prompt_template,)
         llm_chain = prompt | llm_pipeline | StrOutputParser()
         pipeline = ( {"question": RunnablePassthrough()} | llm_chain)
-
-
+        
+    
     return pipeline

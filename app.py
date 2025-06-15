@@ -151,8 +151,16 @@ def runButtonClick():
     
     if(manager.getState() == "loaded"):
         st.write("Running inference...")
-        if(manager.runInference()):
-            st.write("Inference completed")
+        
+        progress_bar = st.progress(0)
+        
+        def update_progress(fraction):
+            progress_bar.progress(fraction)
+            
+            
+        if(manager.runInference(progress_callback=update_progress)):
+            progress_bar.empty()  # Remove progress bar
+            st.write("✅ Inference completed")
             with open("output.pdf", "rb") as f:
                 pdf_data = f.read()
                 
@@ -201,4 +209,4 @@ if st.button("Run inference"):
     
     
     
-    # streamlit run app.py --server.address 0.0.0.0 --server.port 80
+    # streamli  t run app.py --server.address 0.0.0.0 --server.port 80

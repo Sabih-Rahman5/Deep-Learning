@@ -86,7 +86,7 @@ class GPUModelManager:
         
     
     
-        def runInference(self):
+        def runInference(self, progress_callback=None):
             try:
                 pdf_text = self.extract_text_from_pdf()
                 qa_pairs = self.extract_qa(pdf_text)
@@ -100,7 +100,8 @@ class GPUModelManager:
                 #     print(f"Question {number}: {qa['question']}")
                 #     print(f"Answer {number}: {qa['answer']}\n")
                 
-                for number in sorted(qa_pairs, key=int):  # assuming keys are numeric strings
+                total = len(qa_pairs)
+                for i, number in enumerate(sorted(qa_pairs, key=int)):  # assuming keys are numeric strings
                     qa = qa_pairs[number]
                     question = qa["question"]
                     answer = qa["answer"]
@@ -133,6 +134,10 @@ class GPUModelManager:
                     pdf.multi_cell(0, 10, feedback)
                     pdf.ln(5)  # Add a gap before next question-answer pair
                         
+                        
+                        
+                    if progress_callback is not None:
+                        progress_callback((i + 1) / total)
                 # for number in sorted(qa_pairs):
                 #     qa = qa_pairs[number]
                 #     print(f"Question {number}: {qa['question']}")
