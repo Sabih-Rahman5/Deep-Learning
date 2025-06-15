@@ -13,6 +13,7 @@ from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_huggingface import HuggingFacePipeline
+from langchain_core.runnables import RunnableLambda
 
 
 def debug_context_printer(context_docs):
