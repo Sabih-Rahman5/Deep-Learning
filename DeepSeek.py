@@ -15,6 +15,13 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_huggingface import HuggingFacePipeline
 
 
+def debug_context_printer(context_docs):
+    print("\n\n--- Retrieved Context Chunks ---")
+    for i, doc in enumerate(context_docs):
+        print(f"\nChunk {i+1}:\n{doc.page_content}\n")
+    return context_docs
+
+
 def loadModel(knowledge_base=None):
     
     model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
@@ -60,13 +67,11 @@ def loadModel(knowledge_base=None):
         db = FAISS.from_documents(chunked_docs, HuggingFaceEmbeddings(model_name='BAAI/bge-base-en-v1.5'))
         retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 3})
 
-        pipeline = (
-            {"context": retriever, "question": RunnablePassthrough()}
-            | llm_chain
-            )
-        
-        print("Retrieved Context Prompt:", prompt_template)
-
+        pipeline = ({"context": retriever | RunnableLambda(debug_context_printer),
+                     "question": RunnablePassthrough()
+                     }
+                    | llm_chain
+                    )
     else:
         prompt_template = """
         You are an AI teaching assistant. Use the following question and student answer to provide grading and constructive feedback. 

@@ -159,7 +159,7 @@ def runButtonClick():
             
             
         if(manager.runInference(progress_callback=update_progress)):
-            progress_bar.empty()  # Remove progress bar
+            # progress_bar.empty()  # Remove progress bar
             st.write("✅ Inference completed")
             with open("output.pdf", "rb") as f:
                 pdf_data = f.read()
