@@ -152,11 +152,12 @@ def runButtonClick():
     if(manager.getState() == "loaded"):
         st.write("Running inference...")
         
-        # progress_bar = st.progress(0)
+        progress_bar = st.progress(0)
         
-        # def update_progress(fraction):
-        #     progress_bar.progress(fraction)
-        if(manager.runInference()):
+        def update_progress(fraction):
+            progress_bar.progress(fraction)
+            
+        if(manager.runInference(progress_callback=update_progress)):
             # progress_bar.empty()  # Remove progress bar
             st.write("✅ Inference completed")
             with open("output.pdf", "rb") as f:
