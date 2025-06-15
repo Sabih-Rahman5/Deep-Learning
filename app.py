@@ -158,7 +158,7 @@ def runButtonClick():
         #     progress_bar.progress(fraction)
             
             
-        if(manager.runInference())):
+        if(manager.runInference()):
             # progress_bar.empty()  # Remove progress bar
             st.write("✅ Inference completed")
             with open("output.pdf", "rb") as f:
