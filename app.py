@@ -3,6 +3,9 @@ from ModelManager import GPUModelManager
 import os
 import fitz  # PyMuPDF- pdf editor and reader
 
+from PyPDF2 import PdfReader
+
+
 # Streamlit app
 st.set_page_config(page_title="Grader App", page_icon="assets/personal.png")
 st.title("Grader App")
@@ -20,6 +23,11 @@ if "edit_assignment_mode" not in st.session_state:
 if "edited_assignment_text" not in st.session_state:
     st.session_state.edited_assignment_text = ""
 
+if "uploaded_assignment" not in st.session_state:
+    st.session_state.uploaded_assignment = None
+
+    
+    
 
 # knowledgeBase uploader
 knowledgeBase_pdf = st.file_uploader("Upload Knowledge Base", type=["pdf"])
@@ -39,35 +47,14 @@ if knowledgeBase_pdf is not None:
     #print(save_path)
 
 
-# assignment uploader
-# assignment_pdf = st.file_uploader("Upload Assignemnt", type=["pdf"])
-# if assignment_pdf is not None:
-#     save_path = os.path.join("assignment", assignment_pdf.name)
-#     os.makedirs("assignment", exist_ok=True)
-    
-#     for file_name in os.listdir("assignment"):
-#         file_path = os.path.join("assignment", file_name)
-#         os.remove(file_path)
-    
-#     with open(save_path, "wb") as f:
-#         f.write(assignment_pdf.read())
-        
-#     manager.assignment = save_path
-#     st.success("assignment uploaded!")
-#     print(save_path)
-
 
 
 # assignment uploader
-# if(st.session_state.edited_assignment_text == ""):
-    
-# else:
-#     print("returned")
-#     assignment_pdf = None
-
-assignment_pdf = st.file_uploader("Upload Assignment", type=["pdf"], key="assign_upload")
-
-print("Assignment PDF:", assignment_pdf)
+if(st.session_state.edited_assignment_text == ""):
+    assignment_pdf = st.file_uploader("Upload Assignment", type=["pdf"], key="assign_upload")
+else:
+    print("returned")
+    assignment_pdf = None
 
 
 if assignment_pdf is not None:
@@ -215,7 +202,11 @@ if st.button("Load Model"):
     setStatus()
     
 if st.button("Run inference"):
-    runButtonClick()
+    if not st.session_state.uploaded_assignment:
+        st.error("Please upload an assignment first")
+    else:
+        # your inference logic...
+        pass
     
     
     
