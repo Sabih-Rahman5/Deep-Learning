@@ -86,7 +86,7 @@ class GPUModelManager:
         
     
     
-        def runInference(self, progress_callback=None):
+        def runInference(self):
             try:
                 pdf_text = self.extract_text_from_pdf()
                 qa_pairs = self.extract_qa(pdf_text)
@@ -136,8 +136,8 @@ class GPUModelManager:
                         
                         
                         
-                    if progress_callback is not None:
-                        progress_callback((i + 1) / total)
+                    # if progress_callback is not None:
+                    #     progress_callback((i + 1) / total)
                 # for number in sorted(qa_pairs):
                 #     qa = qa_pairs[number]
                 #     print(f"Question {number}: {qa['question']}")
