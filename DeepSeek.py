@@ -98,17 +98,14 @@ def loadModel(knowledge_base=None):
         Ensure that the feedback includes suggestions for improvement and accuracy.
         Question: {question}
         """
-        
-        
-                #! Debugging context retrieval
 
         
         prompt = PromptTemplate( input_variables=["question"], template=prompt_template,)
         llm_chain = prompt | llm_pipeline | StrOutputParser()
         pipeline = ( {"question": RunnablePassthrough()} | llm_chain, )
         
-        pipeline = ({"context": retriever | RunnableLambda(debug_context_printer),
-                     "question": RunnablePassthrough()
-                     } | llm_chain)
+        # pipeline = ({"context": retriever | RunnableLambda(debug_context_printer),
+        #              "question": RunnablePassthrough()
+        #              } | llm_chain)
     
     return pipeline
