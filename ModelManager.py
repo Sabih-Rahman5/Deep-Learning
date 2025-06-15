@@ -130,7 +130,7 @@ class GPUModelManager:
                     pdf.multi_cell(0, 10, sanitize_text(answer))
                     pdf.ln(2)
                     
-                    feedback = self.model.invoke(str(question + "\n" +answer))
+                    feedback = self.model.invoke(str(question + "\n" + answer))
                     
                     
                     # Add Feedback Heading

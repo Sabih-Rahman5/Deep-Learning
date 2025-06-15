@@ -41,7 +41,7 @@ def loadModel(knowledge_base=None):
         max_new_tokens=500,
     )
 
-    llm_pipeline = HuggingFacePipeline(pipeline=text_generation_pipeline)
+    llm_pipeline = HuggingFacePipeline(pipeline=text_generation_pipeline, verbose = True)
 
     # Prompt template to match desired output format
     prompt_template = """
