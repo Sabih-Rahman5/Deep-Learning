@@ -163,7 +163,7 @@ def runButtonClick():
             with open("output.pdf", "rb") as f:
                 pdf_data = f.read()
             
-            # print("PDF data loaded successfully")
+            print("PDF data loaded successfully")
             st.download_button(
             label="📄 Download PDF",
             data=pdf_data,
