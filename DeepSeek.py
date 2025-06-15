@@ -98,6 +98,9 @@ def loadModel(knowledge_base=None):
         Ensure that the feedback includes suggestions for improvement and accuracy.
         Question: {question}
         """
+        
+        
+
 
         
         prompt = PromptTemplate( input_variables=["question"], template=prompt_template,)
