@@ -158,12 +158,12 @@ def runButtonClick():
             progress_bar.progress(fraction)
             
         if(manager.runInference(progress_callback=update_progress)):
-            progress_bar.empty()  # Remove progress bar
+            # progress_bar.empty()  # Remove progress bar
             st.write("✅ Inference completed")
             with open("output.pdf", "rb") as f:
                 pdf_data = f.read()
             
-            print("PDF data loaded successfully")
+            # print("PDF data loaded successfully")
             st.download_button(
             label="📄 Download PDF",
             data=pdf_data,
