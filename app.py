@@ -85,7 +85,7 @@ if assignment_pdf is not None:
 
         st.session_state.edited_assignment_text = full_text
         st.session_state.edit_assignment_mode = True
-
+        st.session_state.uploaded_assignment = assignment_pdf
 
 # --- PDF Text Editor Interface ---
 if st.session_state.edit_assignment_mode:
@@ -202,11 +202,10 @@ if st.button("Load Model"):
     setStatus()
     
 if st.button("Run inference"):
-    if not manager.assignment:
+    if not st.session_state.uploaded_assignment:
         st.error("Please upload an assignment first")
     else:
         manager.runInference()
-        pass
     
     
     
