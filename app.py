@@ -205,7 +205,7 @@ if st.button("Run inference"):
     if not st.session_state.uploaded_assignment:
         st.error("Please upload an assignment first")
     else:
-        # your inference logic...
+        manager.runInference()
         pass
     
     
