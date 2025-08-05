@@ -202,7 +202,7 @@ if st.button("Load Model"):
     setStatus()
     
 if st.button("Run inference"):
-    if not st.session_state.uploaded_assignment:
+    if not manager.assignment:
         st.error("Please upload an assignment first")
     else:
         manager.runInference()
