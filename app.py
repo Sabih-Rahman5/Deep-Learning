@@ -17,14 +17,14 @@ state = manager.getState()
 
 
 # --- Initialize session state flags ---
-# if "edit_assignment_mode" not in st.session_state:
-#     st.session_state.edit_assignment_mode = False
+if "edit_assignment_mode" not in st.session_state:
+    st.session_state.edit_assignment_mode = False
 
-# if "edited_assignment_text" not in st.session_state:
-#     st.session_state.edited_assignment_text = ""
+if "edited_assignment_text" not in st.session_state:
+    st.session_state.edited_assignment_text = ""
 
-# if "uploaded_assignment" not in st.session_state:
-#     st.session_state.uploaded_assignment = None
+if "uploaded_assignment" not in st.session_state:
+    st.session_state.uploaded_assignment = None
 
     
     
